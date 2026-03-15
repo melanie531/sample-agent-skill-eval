@@ -84,6 +84,57 @@ while also revealing false positives on benign patterns (XML namespaces in docx)
 The `.skilleval.yaml` configuration feature exists precisely for this — teams can
 whitelist known-safe domains and adjust severity for their use case.
 
+## ClawHub Community Skills
+
+Source: [clawhub.ai](https://clawhub.ai)
+
+Audited on 2026-03-15.
+
+| Skill | Score (default) | Score (--include-all) | Grade | Critical | Warning | Info | Notes |
+|-------|----------------|----------------------|-------|----------|---------|------|-------|
+| self-evolving-skill | 86 | 84 | B / B | 0 | 1 | 2-3 | STR-007 name format (uppercase) |
+| self-evolve | 90 | — | A | 0 | 1 | 0 | STR-011 description too short |
+| **evolver** | **80** | **0** | **B / F** | **0 / 5** | **1 / 6** | **5 / 17** | **⚠️ VirusTotal flagged** |
+| capability-evolver | 82 | — | B | 0 | 1 | 4 | Same author as evolver |
+
+### 🔴 Case Study: `evolver` — Why `--include-all` Matters
+
+The `evolver` skill is the most interesting finding. ClawHub's VirusTotal integration
+flagged it as suspicious during install. Here's what skill-eval found:
+
+**Default scan (SKILL.md + scripts/ only): 80/B** — looks clean.
+
+**Full scan (`--include-all`): 0/F with 5 CRITICALs:**
+
+| Finding | Severity | File | Details |
+|---------|----------|------|---------|
+| SEC-001 | 🔴 CRITICAL | sanitize.test.js | GitHub OAuth token |
+| SEC-001 | 🔴 CRITICAL | sanitize.test.js | AWS Access Key |
+| SEC-001 | 🔴 CRITICAL | sanitize.test.js | Private Key (×2) |
+| SEC-001 | 🔴 CRITICAL | sanitize.test.js | Generic Password |
+| SEC-004 | ⚠️ WARNING | skills_monitor.js | `npm install` |
+| SEC-002 | ⚠️ WARNING | multiple | External URLs to evomap.ai |
+
+The secrets are in a test file that tests sanitization logic — they may be
+intentional test fixtures. But real-looking credentials should never appear in
+source code, even in tests. Use obviously fake values instead.
+
+**Key lesson:** The default scoped scan (SKILL.md + scripts/) is designed to
+minimize false positives on well-structured skills. But for untrusted or
+VirusTotal-flagged skills, always run `--include-all` to scan the entire directory
+tree. The 5 CRITICALs hiding in `sanitize.test.js` would have been invisible
+without it.
+
+```bash
+# Default scan — looks fine
+skill-eval audit /path/to/evolver/ --quiet
+# → 80/B
+
+# Full scan — reveals hidden issues
+skill-eval audit /path/to/evolver/ --include-all --quiet
+# → 0/F
+```
+
 ## How to Reproduce
 
 ```bash
