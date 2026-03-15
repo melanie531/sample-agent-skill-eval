@@ -169,10 +169,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, testing, and PR wo
 - [OWASP Top 10 for LLMs](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 - [ClawHub](https://clawhub.com) — Agent Skills marketplace
 
-## Security
-
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
-
 ## License
 
-This library is licensed under the MIT-0 License. See the LICENSE file.
+MIT-0

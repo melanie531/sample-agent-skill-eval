@@ -5,24 +5,24 @@
     {
       "query": "Analyze the sales data in my CSV and give me a breakdown by region",
       "should_trigger": true,
-      "trigger_count": 0,
+      "trigger_count": 1,
       "run_count": 1,
-      "trigger_rate": 0.0,
-      "passed": false,
-      "mean_input_tokens": 143412.0,
-      "mean_output_tokens": 1305.0,
-      "mean_total_tokens": 144717.0
+      "trigger_rate": 1.0,
+      "passed": true,
+      "mean_input_tokens": 119508.0,
+      "mean_output_tokens": 2311.0,
+      "mean_total_tokens": 121819.0
     },
     {
       "query": "Read this spreadsheet and compute summary statistics",
       "should_trigger": true,
-      "trigger_count": 0,
+      "trigger_count": 1,
       "run_count": 1,
-      "trigger_rate": 0.0,
-      "passed": false,
-      "mean_input_tokens": 96188.0,
-      "mean_output_tokens": 1055.0,
-      "mean_total_tokens": 97243.0
+      "trigger_rate": 1.0,
+      "passed": true,
+      "mean_input_tokens": 98291.0,
+      "mean_output_tokens": 1215.0,
+      "mean_total_tokens": 99506.0
     },
     {
       "query": "What patterns do you see in the Q3 revenue numbers?",
@@ -31,20 +31,20 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": false,
-      "mean_input_tokens": 121025.0,
-      "mean_output_tokens": 1642.0,
-      "mean_total_tokens": 122667.0
+      "mean_input_tokens": 22957.0,
+      "mean_output_tokens": 156.0,
+      "mean_total_tokens": 23113.0
     },
     {
       "query": "Find outliers in my dataset and explain why they're unusual",
       "should_trigger": true,
-      "trigger_count": 0,
+      "trigger_count": 1,
       "run_count": 1,
-      "trigger_rate": 0.0,
-      "passed": false,
-      "mean_input_tokens": 96074.0,
-      "mean_output_tokens": 1102.0,
-      "mean_total_tokens": 97176.0
+      "trigger_rate": 1.0,
+      "passed": true,
+      "mean_input_tokens": 96575.0,
+      "mean_output_tokens": 1110.0,
+      "mean_total_tokens": 97685.0
     },
     {
       "query": "How many rows and columns are in this CSV file?",
@@ -53,9 +53,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": false,
-      "mean_input_tokens": 46273.0,
-      "mean_output_tokens": 184.0,
-      "mean_total_tokens": 46457.0
+      "mean_input_tokens": 46109.0,
+      "mean_output_tokens": 195.0,
+      "mean_total_tokens": 46304.0
     },
     {
       "query": "Write me a poem about autumn",
@@ -64,9 +64,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 23034.0,
-      "mean_output_tokens": 169.0,
-      "mean_total_tokens": 23203.0
+      "mean_input_tokens": 22950.0,
+      "mean_output_tokens": 170.0,
+      "mean_total_tokens": 23120.0
     },
     {
       "query": "How do I reset my password?",
@@ -75,20 +75,20 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 23035.0,
-      "mean_output_tokens": 231.0,
-      "mean_total_tokens": 23266.0
+      "mean_input_tokens": 22951.0,
+      "mean_output_tokens": 240.0,
+      "mean_total_tokens": 23191.0
     },
     {
       "query": "Deploy my application to production",
       "should_trigger": false,
-      "trigger_count": 0,
+      "trigger_count": 1,
       "run_count": 1,
-      "trigger_rate": 0.0,
-      "passed": true,
-      "mean_input_tokens": 47710.0,
-      "mean_output_tokens": 576.0,
-      "mean_total_tokens": 48286.0
+      "trigger_rate": 1.0,
+      "passed": false,
+      "mean_input_tokens": 47408.0,
+      "mean_output_tokens": 582.0,
+      "mean_total_tokens": 47990.0
     },
     {
       "query": "Can you resize this image to 800x600 pixels?",
@@ -97,9 +97,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 23041.0,
+      "mean_input_tokens": 22957.0,
       "mean_output_tokens": 38.0,
-      "mean_total_tokens": 23079.0
+      "mean_total_tokens": 22995.0
     },
     {
       "query": "Query the database for all users created last month",
@@ -108,18 +108,18 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 47432.0,
-      "mean_output_tokens": 531.0,
-      "mean_total_tokens": 47963.0
+      "mean_input_tokens": 0.0,
+      "mean_output_tokens": 0.0,
+      "mean_total_tokens": 0.0
     }
   ],
   "summary": {
     "total_queries": 10,
-    "passed": 5,
-    "failed": 5,
-    "trigger_precision": 0.0,
-    "no_trigger_precision": 1.0,
-    "mean_total_tokens_per_run": 67405.7
+    "passed": 7,
+    "failed": 3,
+    "trigger_precision": 0.6,
+    "no_trigger_precision": 0.8,
+    "mean_total_tokens_per_run": 50572.3
   },
   "passed": false
 }

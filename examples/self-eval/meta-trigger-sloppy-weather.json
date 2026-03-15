@@ -5,35 +5,35 @@
     {
       "query": "What's the weather like in Sydney today?",
       "should_trigger": true,
-      "trigger_count": 0,
+      "trigger_count": 1,
       "run_count": 1,
-      "trigger_rate": 0.0,
-      "passed": false,
-      "mean_input_tokens": 115290.0,
-      "mean_output_tokens": 711.0,
-      "mean_total_tokens": 116001.0
+      "trigger_rate": 1.0,
+      "passed": true,
+      "mean_input_tokens": 68557.0,
+      "mean_output_tokens": 500.0,
+      "mean_total_tokens": 69057.0
     },
     {
       "query": "Is it going to rain tomorrow in London?",
       "should_trigger": true,
-      "trigger_count": 0,
+      "trigger_count": 1,
       "run_count": 1,
-      "trigger_rate": 0.0,
-      "passed": false,
-      "mean_input_tokens": 91799.0,
-      "mean_output_tokens": 631.0,
-      "mean_total_tokens": 92430.0
+      "trigger_rate": 1.0,
+      "passed": true,
+      "mean_input_tokens": 91594.0,
+      "mean_output_tokens": 515.0,
+      "mean_total_tokens": 92109.0
     },
     {
       "query": "Get me the current temperature for Tokyo",
       "should_trigger": true,
-      "trigger_count": 0,
+      "trigger_count": 1,
       "run_count": 1,
-      "trigger_rate": 0.0,
-      "passed": false,
-      "mean_input_tokens": 116513.0,
-      "mean_output_tokens": 793.0,
-      "mean_total_tokens": 117306.0
+      "trigger_rate": 1.0,
+      "passed": true,
+      "mean_input_tokens": 91382.0,
+      "mean_output_tokens": 786.0,
+      "mean_total_tokens": 92168.0
     },
     {
       "query": "Write a Python function to sort a list",
@@ -42,9 +42,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 22676.0,
-      "mean_output_tokens": 63.0,
-      "mean_total_tokens": 22739.0
+      "mean_input_tokens": 22592.0,
+      "mean_output_tokens": 52.0,
+      "mean_total_tokens": 22644.0
     },
     {
       "query": "Help me debug this React component",
@@ -53,9 +53,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 22674.0,
-      "mean_output_tokens": 96.0,
-      "mean_total_tokens": 22770.0
+      "mean_input_tokens": 22590.0,
+      "mean_output_tokens": 119.0,
+      "mean_total_tokens": 22709.0
     },
     {
       "query": "Summarize this PDF document for me",
@@ -64,18 +64,18 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 22676.0,
-      "mean_output_tokens": 108.0,
-      "mean_total_tokens": 22784.0
+      "mean_input_tokens": 22592.0,
+      "mean_output_tokens": 94.0,
+      "mean_total_tokens": 22686.0
     }
   ],
   "summary": {
     "total_queries": 6,
-    "passed": 3,
-    "failed": 3,
-    "trigger_precision": 0.0,
+    "passed": 6,
+    "failed": 0,
+    "trigger_precision": 1.0,
     "no_trigger_precision": 1.0,
-    "mean_total_tokens_per_run": 65671.7
+    "mean_total_tokens_per_run": 53562.2
   },
-  "passed": false
+  "passed": true
 }

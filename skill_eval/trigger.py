@@ -215,23 +215,29 @@ def _detect_skill_trigger_from_parsed(parsed: dict, skill_path: Path) -> bool:
     Looks for:
     1. Read tool_use referencing SKILL.md
     2. Skill tool_use matching skill name
-    3. Any reference to the skill path in tool calls
-    4. Bash/shell commands referencing skill scripts or CLI commands
+    3. Bash/shell commands that *execute* skill scripts (not just reference paths)
+    4. Any tool explicitly invoking the skill by name
     """
     skill_name = skill_path.name
     skill_md = "SKILL.md"
 
-    # Build a set of script names from the skill's scripts/ directory
+    # Build script file names from the skill's scripts/ directory
     scripts_dir = skill_path / "scripts"
-    script_names: set[str] = set()
+    script_files: set[str] = set()      # Full filenames: "weather.py"
+    script_stems: set[str] = set()      # Stems only: "weather"
     if scripts_dir.is_dir():
         for f in scripts_dir.iterdir():
             if f.is_file():
-                script_names.add(f.name)          # e.g. "weather.py"
-                script_names.add(f.stem)           # e.g. "weather"
-    # Also add the skill name itself as a potential CLI command
-    script_names.add(skill_name)                   # e.g. "data-analysis"
-    script_names.add(skill_name.replace("-", "_"))  # e.g. "data_analysis"
+                script_files.add(f.name)
+                script_stems.add(f.stem)
+
+    # Execution patterns for Bash command matching
+    # These indicate the script is being *run*, not just referenced in a path
+    import re as _re
+    _EXEC_PREFIXES = (
+        "python3 ", "python ", "bash ", "sh ", "./", "node ",
+        "ruby ", "perl ", "php ",
+    )
 
     for tool_call in parsed.get("tool_calls", []):
         name = tool_call.get("name", "")
@@ -247,21 +253,47 @@ def _detect_skill_trigger_from_parsed(parsed: dict, skill_path: Path) -> bool:
             if skill_md in file_path:
                 return True
 
-        # Check for Bash/shell commands referencing skill scripts or commands
+        # Check for Bash/shell commands executing skill scripts
         if name.lower() in ("bash", "shell", "terminal"):
             command = str(input_data.get("command", ""))
             command_lower = command.lower()
-            for script in script_names:
-                if script.lower() in command_lower:
-                    return True
-            # Also check for scripts/ path references
-            if "scripts/" in command or str(skill_path) in command:
+
+            # Check 1: Command executes a script file from the skill
+            # e.g. "python3 scripts/weather.py --city NYC"
+            for script_file in script_files:
+                # Must be preceded by an execution context, not just in a path
+                if script_file.lower() in command_lower:
+                    # Verify it looks like execution, not just ls/cat of a directory
+                    for prefix in _EXEC_PREFIXES:
+                        if prefix in command_lower:
+                            return True
+                    # Also match direct script execution: "./scripts/weather.py"
+                    if f"scripts/{script_file.lower()}" in command_lower:
+                        return True
+
+            # Check 2: Command uses the skill name as a CLI command
+            # e.g. "skill-eval audit ." — skill_name is the first token or after pipe
+            # Use word boundary to avoid matching paths like examples/data-analysis/
+            skill_cmd_pattern = _re.compile(
+                r'(?:^|[|;&]\s*)' + _re.escape(skill_name) + r'(?:\s|$)',
+                _re.IGNORECASE,
+            )
+            if skill_cmd_pattern.search(command):
                 return True
 
-        # Check for any tool referencing the skill path
-        input_str = json.dumps(input_data)
-        if skill_name in input_str:
-            return True
+            # Check 3: Command uses underscore variant as a module
+            # e.g. "python3 -m data_analysis --file test.csv"
+            underscore_name = skill_name.replace("-", "_")
+            module_pattern = _re.compile(
+                r'-m\s+' + _re.escape(underscore_name) + r'(?:\s|$|\.|:)',
+                _re.IGNORECASE,
+            )
+            if module_pattern.search(command):
+                return True
+
+            # Check 4: Full skill path explicitly in command
+            if str(skill_path) in command:
+                return True
 
     # Also check text output for skill activation markers
     text = parsed.get("text", "")

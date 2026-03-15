@@ -95,13 +95,13 @@ class TestDetectSkillTrigger:
         assert result is True
 
     def test_detect_skill_name_in_tool_input(self):
-        """Should detect skill name referenced in tool inputs."""
+        """Should detect skill name used as a CLI command in Bash."""
         stream = json.dumps({
             "type": "content_block_start",
             "content_block": {
                 "type": "tool_use",
                 "name": "Bash",
-                "input": {"command": "cat eval-skill/data.csv"},
+                "input": {"command": "eval-skill --audit ."},
                 "id": "1",
             },
         })
@@ -353,9 +353,12 @@ class TestBashTriggerDetection:
         assert _detect_skill_trigger_from_parsed(parsed, skill_dir) is True
 
     def test_bash_scripts_path_reference(self, tmp_path):
-        """Bash command with scripts/ path should trigger."""
+        """Bash command executing a script via scripts/ path should trigger."""
         skill_dir = tmp_path / "my-skill"
         skill_dir.mkdir()
+        scripts_dir = skill_dir / "scripts"
+        scripts_dir.mkdir()
+        (scripts_dir / "process.py").write_text("# process script")
 
         parsed = {
             "tool_calls": [{"name": "Bash", "input": {"command": "python3 scripts/process.py input.txt"}}],
@@ -367,6 +370,22 @@ class TestBashTriggerDetection:
         """Bash command not related to skill should not trigger."""
         parsed = {
             "tool_calls": [{"name": "Bash", "input": {"command": "echo hello world"}}],
+            "text": "",
+        }
+        assert _detect_skill_trigger_from_parsed(parsed, Path("/tmp/eval-skill")) is False
+
+    def test_bash_skill_name_in_path_no_trigger(self):
+        """Bash command with skill name only in a path (not as CLI command) should NOT trigger."""
+        parsed = {
+            "tool_calls": [{"name": "Bash", "input": {"command": "ls examples/data-analysis/"}}],
+            "text": "",
+        }
+        assert _detect_skill_trigger_from_parsed(parsed, Path("/tmp/data-analysis")) is False
+
+    def test_bash_cat_skill_dir_no_trigger(self):
+        """cat/ls of skill directory should NOT trigger (not execution)."""
+        parsed = {
+            "tool_calls": [{"name": "Bash", "input": {"command": "cat eval-skill/data.csv"}}],
             "text": "",
         }
         assert _detect_skill_trigger_from_parsed(parsed, Path("/tmp/eval-skill")) is False

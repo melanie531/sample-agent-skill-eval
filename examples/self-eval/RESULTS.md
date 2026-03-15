@@ -99,6 +99,8 @@ a genuine capability difference.**
 
 Trigger eval checks whether the skill activates for relevant queries.
 
+### Before CLI detection fix (v1 — parser only handled API format)
+
 | Skill | Positive (should trigger) | Negative (should NOT trigger) |
 |-------|--------------------------|------------------------------|
 | data-analysis | 0/5 detected ❌ | 5/5 correct ✅ |
@@ -106,14 +108,30 @@ Trigger eval checks whether the skill activates for relevant queries.
 | good-skill | 0/2 detected ❌ | 3/3 correct ✅ |
 | **Overall** | **0/10 (0% recall)** | **11/11 (100% specificity)** |
 
-**Analysis:** Trigger detection has **perfect specificity** (never falsely triggers)
-but **zero recall** (never detects true activations). This is a known framework
-limitation: trigger detection counts explicit tool_calls, but these skills invoke
-CLI commands via Bash, which doesn't register as a "trigger."
+### After CLI detection fix (v2 — Claude CLI format + Bash command detection)
 
-**This is a trigger detection framework gap, not a skill quality issue.** The
-framework would need to count Bash invocations of skill-related commands to detect
-CLI-based skill activation.
+| Skill | Positive (should trigger) | Negative (should NOT trigger) |
+|-------|--------------------------|------------------------------|
+| data-analysis | 3/5 detected ✅ | 4/5 correct (1 false positive) |
+| sloppy-weather | **3/3 detected** ✅ | **3/3 correct** ✅ |
+| good-skill | 0/2 detected ❌ | 3/3 correct ✅ |
+| **Overall** | **6/10 (60% recall)** | **10/11 (91% specificity)** |
+
+**Improvements:**
+- **sloppy-weather: 0% → 100%** — perfect score after fix, all weather queries
+  correctly detected as triggering the weather.py script
+- **data-analysis: 0% → 60%** — 3/5 queries correctly detected (agent ran
+  analyze_csv.py via Bash). 2 queries didn't trigger because agent answered
+  from general knowledge without running scripts
+- **good-skill: unchanged at 0%** — agent never ran process.py for the generic
+  queries. This reflects real behavior, not a detection bug
+- **1 false positive** on data-analysis: "Deploy my application to production"
+  triggered because the agent used Bash in a way that matched script detection
+
+**Root cause of the fix:** The parser was only handling Anthropic raw API format
+(`content_block_start`), but Claude CLI uses `{type:"assistant", message:{content:[...]}}`
+format. After fixing the parser AND adding Bash command analysis, trigger detection
+improved dramatically.
 
 ## Overall Assessment
 
@@ -123,18 +141,20 @@ CLI-based skill activation.
 | **Functional (deterministic assertions)** | 100% | High — all correct |
 | **Functional (LLM assertions)** | ~90% | Medium — occasional judge inconsistency |
 | **Functional (delta computation)** | Correct | High — accurately reflects skill impact |
-| **Trigger (specificity)** | 100% | High — no false positives |
-| **Trigger (recall)** | 0% | Known gap — CLI skills not detected |
+| **Trigger (recall)** | 60% (was 0%) | Medium — CLI detection working, some queries don't use tools |
+| **Trigger (specificity)** | 91% (was 100%) | High — 1 false positive out of 11 negatives |
 
 ## Recommendations
 
 1. **Audit: Production-ready** — 100% accuracy, fully deterministic
 2. **Functional: Production-ready for deterministic assertions** — prefer `contains`,
    `matches regex`, `starts with` over LLM-judged assertions for reliable grading
-3. **Trigger: Needs enhancement** — add CLI invocation detection for skills that
-   operate via Bash commands rather than dedicated tools
+3. **Trigger: Significantly improved** — CLI detection working; remaining gaps are
+   when agents answer from general knowledge without invoking skill tools
 4. **LLM judge: Use cautiously** — set a higher confidence threshold (e.g., 0.85)
    to flag uncertain judgments rather than auto-pass at 0.50
+5. **False positive mitigation** — tighten Bash command matching to require more
+   specific script path references rather than partial name matches
 
 ## How to Reproduce
 
