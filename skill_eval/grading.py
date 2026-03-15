@@ -60,6 +60,43 @@ def _deterministic_grade(output: str, assertion: str) -> Optional[AssertionResul
     """
     lower = assertion.lower().strip()
 
+    # --- Compound OR: "X or Y or Z" ---
+    # Split on " or " only when each part looks like a deterministic assertion
+    # (starts with contains/does not contain/starts with/ends with/matches/etc.)
+    _DETERMINISTIC_PREFIXES = (
+        "contains ", "does not contain ", "starts with ", "ends with ",
+        "matches regex ", "matches pattern ", "has at least ",
+        "is valid json", "output is valid json",
+    )
+    or_parts = re.split(r'\s+or\s+', lower)
+    if len(or_parts) >= 2 and all(
+        any(p.strip().startswith(pfx) for pfx in _DETERMINISTIC_PREFIXES)
+        for p in or_parts
+    ):
+        # Each part is a deterministic assertion — pass if ANY passes
+        sub_results = []
+        for part in or_parts:
+            # Reconstruct with original casing isn't needed; part is lowered
+            sub = _deterministic_grade(output, part.strip())
+            if sub is not None:
+                sub_results.append(sub)
+                if sub.passed:
+                    return AssertionResult(
+                        text=assertion,
+                        passed=True,
+                        evidence=f"OR satisfied by: {part.strip()} — {sub.evidence}",
+                        method="deterministic",
+                    )
+        # None passed
+        if sub_results:
+            evidences = [f"{p.strip()}: {r.evidence}" for p, r in zip(or_parts, sub_results)]
+            return AssertionResult(
+                text=assertion,
+                passed=False,
+                evidence=f"No OR branch satisfied — {'; '.join(evidences)}",
+                method="deterministic",
+            )
+
     # "contains X" / 'contains "X"'
     m = re.match(r'^contains\s+["\'](.+?)["\']$', lower)
     if not m:

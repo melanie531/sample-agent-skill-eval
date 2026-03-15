@@ -189,6 +189,67 @@ class TestDeterministicNoMatch:
         assert result is None
 
 
+class TestCompoundOrAssertions:
+    """Test 'X or Y' compound assertion support."""
+
+    def test_or_first_branch_matches(self):
+        result = _deterministic_grade("CRITICAL error found", "contains 'CRITICAL' or contains 'critical'")
+        assert result is not None
+        assert result.passed is True
+        assert "OR satisfied" in result.evidence
+
+    def test_or_second_branch_matches(self):
+        result = _deterministic_grade("found critical issue", "contains 'CRITICAL' or contains 'critical'")
+        assert result is not None
+        assert result.passed is True
+
+    def test_or_no_branch_matches(self):
+        result = _deterministic_grade("everything is fine", "contains 'CRITICAL' or contains 'error'")
+        assert result is not None
+        assert result.passed is False
+        assert "No OR branch satisfied" in result.evidence
+
+    def test_or_three_branches(self):
+        result = _deterministic_grade("Grade: F", "contains '100' or contains 'Grade: A' or contains 'Grade: F'")
+        assert result is not None
+        assert result.passed is True
+
+    def test_or_three_branches_none_match(self):
+        result = _deterministic_grade("Score: 75/100, Grade: C", "contains 'Grade: A' or contains 'Grade: F' or contains 'FAILED'")
+        assert result is not None
+        assert result.passed is False
+
+    def test_or_mixed_contains_and_does_not_contain(self):
+        """OR of contains + does not contain."""
+        result = _deterministic_grade("all good", "contains 'error' or does not contain 'bad'")
+        assert result is not None
+        assert result.passed is True  # second branch passes
+
+    def test_or_with_quoted_strings(self):
+        result = _deterministic_grade("PERM-001 found", "contains 'PERM' or contains 'permission'")
+        assert result is not None
+        assert result.passed is True
+
+    def test_or_case_insensitive(self):
+        result = _deterministic_grade("found Bash wildcard", "contains 'bash' or contains 'shell'")
+        assert result is not None
+        assert result.passed is True
+
+    def test_or_not_triggered_for_single_assertion(self):
+        """Single assertion without 'or' should work normally."""
+        result = _deterministic_grade("hello world", "contains 'hello'")
+        assert result is not None
+        assert result.passed is True
+        assert "OR" not in result.evidence
+
+    def test_or_defers_if_any_branch_non_deterministic(self):
+        """If any OR branch isn't a known deterministic pattern, defer to LLM."""
+        result = _deterministic_grade("some output", "contains 'hello' or is well-formatted")
+        # 'is well-formatted' is not deterministic, so the OR split shouldn't match
+        # It should fall through to single contains and try to match the whole string
+        assert result is not None  # matches 'contains' pattern with the full string
+
+
 class TestGradeOutput:
     """Test the main grade_output entry point."""
 

@@ -168,7 +168,7 @@ class ClaudeRunner(AgentRunner):
             cmd = self._build_cmd_without_skill(prompt)
 
         if output_format == "stream-json":
-            cmd.extend(["--output-format", "stream-json"])
+            cmd.extend(["--output-format", "stream-json", "--verbose"])
 
         start = time.monotonic()
         try:
