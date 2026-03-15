@@ -1,6 +1,6 @@
 {
   "skill_name": "good-skill",
-  "skill_path": "/home/ec2-user/agent-skill-evaluation/tests/fixtures/good-skill",
+  "skill_path": "./tests/fixtures/good-skill",
   "eval_count": 2,
   "runs_per_eval": 1,
   "metadata": {

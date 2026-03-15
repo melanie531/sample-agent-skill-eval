@@ -1,6 +1,6 @@
 {
   "skill_name": "skill-eval",
-  "skill_path": "/home/ec2-user/agent-skill-evaluation",
+  "skill_path": ".",
   "eval_count": 5,
   "runs_per_eval": 1,
   "metadata": {

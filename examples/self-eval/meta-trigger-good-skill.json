@@ -1,6 +1,6 @@
 {
   "skill_name": "good-skill",
-  "skill_path": "/home/ec2-user/agent-skill-evaluation/tests/fixtures/good-skill",
+  "skill_path": "./tests/fixtures/good-skill",
   "query_results": [
     {
       "query": "Process this input file and return the results",

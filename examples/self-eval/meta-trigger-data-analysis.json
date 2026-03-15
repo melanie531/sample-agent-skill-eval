@@ -1,6 +1,6 @@
 {
   "skill_name": "data-analysis",
-  "skill_path": "/home/ec2-user/agent-skill-evaluation/examples/data-analysis",
+  "skill_path": "./examples/data-analysis",
   "query_results": [
     {
       "query": "Analyze the sales data in my CSV and give me a breakdown by region",
@@ -9,9 +9,9 @@
       "run_count": 1,
       "trigger_rate": 1.0,
       "passed": true,
-      "mean_input_tokens": 119508.0,
-      "mean_output_tokens": 2311.0,
-      "mean_total_tokens": 121819.0
+      "mean_input_tokens": 118998.0,
+      "mean_output_tokens": 1830.0,
+      "mean_total_tokens": 120828.0
     },
     {
       "query": "Read this spreadsheet and compute summary statistics",
@@ -20,9 +20,9 @@
       "run_count": 1,
       "trigger_rate": 1.0,
       "passed": true,
-      "mean_input_tokens": 98291.0,
-      "mean_output_tokens": 1215.0,
-      "mean_total_tokens": 99506.0
+      "mean_input_tokens": 120873.0,
+      "mean_output_tokens": 1093.0,
+      "mean_total_tokens": 121966.0
     },
     {
       "query": "What patterns do you see in the Q3 revenue numbers?",
@@ -31,9 +31,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": false,
-      "mean_input_tokens": 22957.0,
-      "mean_output_tokens": 156.0,
-      "mean_total_tokens": 23113.0
+      "mean_input_tokens": 71161.0,
+      "mean_output_tokens": 442.0,
+      "mean_total_tokens": 71603.0
     },
     {
       "query": "Find outliers in my dataset and explain why they're unusual",
@@ -42,9 +42,9 @@
       "run_count": 1,
       "trigger_rate": 1.0,
       "passed": true,
-      "mean_input_tokens": 96575.0,
-      "mean_output_tokens": 1110.0,
-      "mean_total_tokens": 97685.0
+      "mean_input_tokens": 96550.0,
+      "mean_output_tokens": 1174.0,
+      "mean_total_tokens": 97724.0
     },
     {
       "query": "How many rows and columns are in this CSV file?",
@@ -53,9 +53,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": false,
-      "mean_input_tokens": 46109.0,
-      "mean_output_tokens": 195.0,
-      "mean_total_tokens": 46304.0
+      "mean_input_tokens": 46089.0,
+      "mean_output_tokens": 184.0,
+      "mean_total_tokens": 46273.0
     },
     {
       "query": "Write me a poem about autumn",
@@ -64,9 +64,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 22950.0,
-      "mean_output_tokens": 170.0,
-      "mean_total_tokens": 23120.0
+      "mean_input_tokens": 22942.0,
+      "mean_output_tokens": 142.0,
+      "mean_total_tokens": 23084.0
     },
     {
       "query": "How do I reset my password?",
@@ -75,9 +75,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 22951.0,
-      "mean_output_tokens": 240.0,
-      "mean_total_tokens": 23191.0
+      "mean_input_tokens": 22943.0,
+      "mean_output_tokens": 236.0,
+      "mean_total_tokens": 23179.0
     },
     {
       "query": "Deploy my application to production",
@@ -86,9 +86,9 @@
       "run_count": 1,
       "trigger_rate": 1.0,
       "passed": false,
-      "mean_input_tokens": 47408.0,
-      "mean_output_tokens": 582.0,
-      "mean_total_tokens": 47990.0
+      "mean_input_tokens": 47630.0,
+      "mean_output_tokens": 618.0,
+      "mean_total_tokens": 48248.0
     },
     {
       "query": "Can you resize this image to 800x600 pixels?",
@@ -97,9 +97,9 @@
       "run_count": 1,
       "trigger_rate": 0.0,
       "passed": true,
-      "mean_input_tokens": 22957.0,
-      "mean_output_tokens": 38.0,
-      "mean_total_tokens": 22995.0
+      "mean_input_tokens": 22949.0,
+      "mean_output_tokens": 31.0,
+      "mean_total_tokens": 22980.0
     },
     {
       "query": "Query the database for all users created last month",
@@ -119,7 +119,7 @@
     "failed": 3,
     "trigger_precision": 0.6,
     "no_trigger_precision": 0.8,
-    "mean_total_tokens_per_run": 50572.3
+    "mean_total_tokens_per_run": 57588.5
   },
   "passed": false
 }

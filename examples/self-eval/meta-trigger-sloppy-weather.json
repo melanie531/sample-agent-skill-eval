@@ -1,6 +1,6 @@
 {
   "skill_name": "sloppy-weather",
-  "skill_path": "/home/ec2-user/agent-skill-evaluation/examples/golden-dataset/bad-skills/sloppy-weather",
+  "skill_path": "./examples/golden-dataset/bad-skills/sloppy-weather",
   "query_results": [
     {
       "query": "What's the weather like in Sydney today?",
